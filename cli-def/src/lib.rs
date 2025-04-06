@@ -7,7 +7,7 @@ use commands::{
 
 #[derive(Parser, Debug)]
 #[command(
-	name = "nilla-nixos",
+	name = "nilla-home",
 	version,
 	long_about = None,
 )]

@@ -22,11 +22,11 @@ nilla.create ({ config }: {
     };
 
     modules.nilla = {
-      nixos = ./modules/nixos.nix;
+      nixos = ./modules/home.nix;
     };
 
-    packages.default = config.packages.nilla-nixos;
-    packages.nilla-nixos = {
+    packages.default = config.packages.nilla-home;
+    packages.nilla-home = {
       systems = [ "x86_64-linux" "aarch64-linux" ];
 
       package = { fenix, makeRustPlatform, lib, installShellFiles, ... }:
@@ -41,7 +41,7 @@ nilla.create ({ config }: {
           };
         in
         platform.buildRustPackage {
-          meta.mainProgram = "nilla-nixos";
+          meta.mainProgram = "nilla-home";
           pname = manifest.name;
           version = manifest.version;
 
@@ -57,8 +57,8 @@ nilla.create ({ config }: {
         };
     };
 
-    shells.default = config.shells.nilla-nixos;
-    shells.nilla-nixos = {
+    shells.default = config.shells.nilla-home;
+    shells.nilla-home = {
       systems = [ "x86_64-linux" ];
 
       shell = { mkShell, fenix, bacon, pkg-config, ... }:

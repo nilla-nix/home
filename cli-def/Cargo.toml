@@ -1,8 +1,8 @@
 [package]
-name = "nixos-cli-def"
+name = "cli-def"
 version = "0.0.0"
 edition = "2024"
-repository = "https://github.com/nilla-nix/cli"
+repository = "https://github.com/nilla-nix/home"
 
 [dependencies]
 clap = { version = "4.5.32", features = ["derive"] }

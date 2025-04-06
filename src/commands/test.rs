@@ -3,7 +3,7 @@ use tokio::process::Command;
 
 use crate::util::nix;
 
-pub async fn test_cmd(cli: &nixos_cli_def::Cli, args: &nixos_cli_def::commands::test::TestArgs) {
+pub async fn test_cmd(cli: &cli_def::Cli, args: &cli_def::commands::test::TestArgs) {
     debug!("Resolving project {}", cli.project);
     let Ok(project) = crate::util::project::resolve(&cli.project).await else {
         return error!("Could not find project {}", cli.project);
@@ -26,14 +26,18 @@ pub async fn test_cmd(cli: &nixos_cli_def::Cli, args: &nixos_cli_def::commands::
         _ => None,
     };
 
-    let hostname = if let Some(name) = args.name.clone() {
-        if name.contains('.') {
-            return error!("Invalid hostname {}", name);
+    let (user, tag) = if let Some(name) = args.name.clone() {
+        if name.contains('@') {
+            let sp = name.split('@').map(str::to_string).collect::<Vec<String>>();
+            (sp[0].clone(), sp[1].clone())
         } else {
-            name
+            let system = nix::get_system().await.unwrap();
+            (name, system)
         }
     } else {
-        gethostname::gethostname().into_string().unwrap()
+        let user = whoami::username();
+        let system = nix::get_system().await.unwrap();
+        (user, system)
     };
 
     let attribute = &format!("systems.nixos.\"{hostname}\".result.config.system.build.toplevel");

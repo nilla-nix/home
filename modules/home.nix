@@ -3,16 +3,24 @@ let
   inherit (config) inputs;
 in
 {
-  options.systems = {
-    nixos = lib.options.create {
-      description = "NixOS systems to create.";
+  options.homes = lib.options.create {
+      description = "Home-Manager homes to create.";
       default.value = { };
       type = lib.types.attrs.of (lib.types.submodule ({ config }: {
         options = {
           args = lib.options.create {
-            description = "Additional arguments to pass to system modules.";
+            description = "Additional arguments to pass to home-manager modules.";
             type = lib.types.attrs.any;
             default.value = { };
+          };
+
+          home-manager = lib.options.create {
+            description = "The home-manager input to use.";
+            type = lib.types.raw;
+            default.value =
+              if inputs ? home-manager
+              then inputs.home-manager.result
+              else null;
           };
 
           pkgs = lib.options.create {
@@ -29,34 +37,32 @@ in
           };
 
           modules = lib.options.create {
-            description = "A list of modules to use for the system.";
+            description = "A list of modules to use for home-manager.";
             type = lib.types.list.of lib.types.raw;
             default.value = [ ];
           };
 
           result = lib.options.create {
-            description = "The created NixOS system.";
+            description = "The created Home Manager home.";
             type = lib.types.raw;
             writable = false;
-            default.value = import "${config.pkgs.path}/nixos/lib/eval-config.nix" {
+            default.value = config.home-manager.lib.homeManagerConfiguration {
               pkgs = config.pkgs;
               lib = config.pkgs.lib;
-              specialArgs = config.args;
+              extraSpecialArgs = config.args;
               modules = config.modules;
-              modulesLocation = null;
             };
           };
         };
       }));
     };
-  };
 
   config = {
     assertions = lib.attrs.mapToList
       (name: value: {
         assertion = !(builtins.isNull value.pkgs);
-        message = "A Nixpkgs instance is required for the NixOS system \"${name}\", but none was provided and \"inputs.nixpkgs\" does not exist.";
+        message = "A Nixpkgs instance is required for the home-manager home \"${name}\", but none was provided and \"inputs.nixpkgs\" does not exist.";
       })
-      config.systems.nixos;
+      config.homes;
   };
 }
