@@ -531,6 +531,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
+name = "home-cli-def"
+version = "0.0.0"
+dependencies = [
+ "clap",
+ "clap_complete",
+ "clio",
+]
+
+[[package]]
 name = "icu_collections"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -810,7 +819,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "nilla-nixos"
+name = "nilla-home"
 version = "0.0.0"
 dependencies = [
  "anyhow",
@@ -820,9 +829,9 @@ dependencies = [
  "colored 3.0.0",
  "fern",
  "gethostname",
+ "home-cli-def",
  "lazy_static",
  "log",
- "nixos-cli-def",
  "once_cell",
  "prettytable-rs",
  "regex",
@@ -832,15 +841,6 @@ dependencies = [
  "url",
  "which",
  "whoami",
-]
-
-[[package]]
-name = "nixos-cli-def"
-version = "0.0.0"
-dependencies = [
- "clap",
- "clap_complete",
- "clio",
 ]
 
 [[package]]

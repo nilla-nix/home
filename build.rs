@@ -9,7 +9,7 @@ fn main() -> std::io::Result<()> {
             .unwrap(),
     );
 
-    let cmd = nixos_cli_def::Cli::command().after_long_help(format!(
+    let cmd = home_cli_def::Cli::command().after_long_help(format!(
         "
 {HEADER_STYLE}Valid project sources{HEADER_STYLE:#}
   path
@@ -78,7 +78,7 @@ fn main() -> std::io::Result<()> {
         let mut buffer: Vec<u8> = Default::default();
         man.render(&mut buffer)?;
         std::fs::write(
-            out_dir.join(format!("nilla-nixos-{}", man.get_filename())),
+            out_dir.join(format!("nilla-home-{}", man.get_filename())),
             buffer,
         )?;
     }

@@ -70,7 +70,7 @@ where
 }
 
 pub async fn evaluate(code: &str, opts: EvalOpts) -> Result<EvalResult> {
-    if <nixos_cli_def::Cli as clap::Parser>::parse().show_eval_commands {
+    if <home_cli_def::Cli as clap::Parser>::parse().show_eval_commands {
         info!("{code}");
     }
 
