@@ -14,17 +14,20 @@
       "hash": "1axv80c6g3qg4aggggkh85nyxsw01pjdw6rlvsxm66hd25zxc779"
     },
     "nilla": {
-      "type": "Git",
+      "type": "GitRelease",
       "repository": {
         "type": "GitHub",
         "owner": "nilla-nix",
         "repo": "nilla"
       },
-      "branch": "main",
+      "pre_releases": true,
+      "version_upper_bound": null,
+      "release_prefix": null,
       "submodules": false,
-      "revision": "b0d6064bacffb46ff361fdd00e9321cac9d82c62",
-      "url": "https://github.com/nilla-nix/nilla/archive/b0d6064bacffb46ff361fdd00e9321cac9d82c62.tar.gz",
-      "hash": "0mwhxa2wp0smzhkjibcfbd3w9lidr9vhb0irgkvr7fqyqj9xfg6n"
+      "version": "v0.0.0-alpha.12",
+      "revision": "5d3e509727f387a3000d9ac32031836661f233c9",
+      "url": "https://api.github.com/repos/nilla-nix/nilla/tarball/v0.0.0-alpha.12",
+      "hash": "0y70c9p4ln0jd673k2ifi28s92pgphjdykgar71s20bv2qzg8naz"
     },
     "nixpkgs": {
       "type": "Git",
