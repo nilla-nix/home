@@ -1,11 +1,11 @@
 [package]
-name = "nilla-nixos"
+name = "nilla-home"
 version = "0.0.0"
 edition = "2024"
-repository = "https://github.com/nilla-nix/nixos"
+repository = "https://github.com/nilla-nix/home"
 
 [dependencies]
-nixos-cli-def = { version = "0.0.0", path = "./nixos-cli-def" }
+home-cli-def = { version = "0.0.0", path = "./home-cli-def" }
 anyhow = "1.0.97"
 clap = { version = "4.5.32", features = ["derive"] }
 log = "0.4.26"
@@ -25,6 +25,6 @@ which = "7.0.2"
 whoami = "1.6.0"
 
 [build-dependencies]
-nixos-cli-def = { version = "0.0.0", path = "./nixos-cli-def" }
+home-cli-def = { version = "0.0.0", path = "./home-cli-def" }
 clap = { version = "4.5.32", features = ["derive"] }
 clap_mangen = "0.2.26"

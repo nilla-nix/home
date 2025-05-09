@@ -7,8 +7,8 @@ use crate::{
 };
 
 pub async fn switch_cmd(
-    cli: &nixos_cli_def::Cli,
-    args: &nixos_cli_def::commands::switch::SwitchArgs,
+    cli: &home_cli_def::Cli,
+    args: &home_cli_def::commands::switch::SwitchArgs,
 ) {
     debug!("Resolving project {}", cli.project);
     let Ok(project) = crate::util::project::resolve(&cli.project).await else {

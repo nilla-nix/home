@@ -2,7 +2,7 @@ use log::{debug, error, info};
 
 use crate::{get_home_specifier_and_system, util::nix};
 
-pub async fn build_cmd(cli: &nixos_cli_def::Cli, args: &nixos_cli_def::commands::build::BuildArgs) {
+pub async fn build_cmd(cli: &home_cli_def::Cli, args: &home_cli_def::commands::build::BuildArgs) {
     debug!("Resolving project {}", cli.project);
     let Ok(project) = crate::util::project::resolve(&cli.project).await else {
         return error!("Could not find project {}", cli.project);

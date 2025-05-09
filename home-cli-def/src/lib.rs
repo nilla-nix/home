@@ -1,13 +1,11 @@
 pub mod commands;
 
 use clap::{ArgAction, Parser, Subcommand};
-use commands::{
-    build::BuildArgs, completions::CompletionsArgs, switch::SwitchArgs,
-};
+use commands::{build::BuildArgs, completions::CompletionsArgs, switch::SwitchArgs};
 
 #[derive(Parser, Debug)]
 #[command(
-	name = "nilla-nixos",
+	name = "nilla-home",
 	version,
 	long_about = None,
 )]
