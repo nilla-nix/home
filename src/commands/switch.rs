@@ -37,7 +37,7 @@ pub async fn switch_cmd(
         Err(e) => return error!("{:?}", e),
     };
 
-    let attribute = format!("homes.\"{specifier}\".result.activationPackage");
+    let attribute = format!("homes.\"{specifier}\".result.\"{system}\".activationPackage");
 
     info!("Building home {specifier}");
     let out = nix::build(
