@@ -25,9 +25,16 @@ in
         home_name = config.__module__.args.dynamic.name;
         home_name_parts = builtins.match "([a-z][-a-z0-9]*)(@([-A-Za-z0-9]+))?(:([-_A-Za-z0-9]+))?" home_name;
 
+        username = builtins.elemAt home_name_parts 0;
         system = builtins.elemAt home_name_parts 4;
 
         systemProvided = system != null;
+
+        defaultModules = [
+          ({ lib, ... }: {
+            home.username = lib.modules.mkDefault username;
+          })
+        ];
       in {
         options = {
           systems = lib.options.create {
@@ -68,7 +75,6 @@ in
           modules = lib.options.create {
             description = "A list of modules to use for home-manager.";
             type = lib.types.list.of lib.types.raw;
-            default.value = [ ];
           };
 
           result = lib.options.create {
@@ -77,6 +83,10 @@ in
             writable = false;
             default.value = result;
           };
+        };
+
+        config = {
+          modules = defaultModules; # Provided down here rather than as a default so they don't get overriden when a user specifies additional modules
         };
       }));
     };
