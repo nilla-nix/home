@@ -30,7 +30,7 @@ pub async fn build_cmd(cli: &home_cli_def::Cli, args: &home_cli_def::commands::b
         Err(e) => return error!("{:?}", e),
     };
 
-    let attribute = format!("homes.\"{specifier}\".result.activationPackage");
+    let attribute = format!("homes.\"{specifier}\".result.\"{system}\".activationPackage");
 
     info!("Building home {specifier}");
     let out = nix::build(

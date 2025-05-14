@@ -2,13 +2,42 @@
 { lib, config }:
 let
   inherit (config) inputs;
+
+  
 in
 {
   options.homes = lib.options.create {
       description = "Home-Manager homes to create.";
       default.value = { };
-      type = lib.types.attrs.of (lib.types.submodule ({ config }: {
+      type = lib.types.attrs.of (lib.types.submodule ({ config }: let
+        homeForSystem = system: config.home-manager.lib.homeManagerConfiguration {
+          pkgs = config.pkgs.${system};
+          lib = config.pkgs.lib;
+          extraSpecialArgs = { inherit system; } // config.args;
+          modules = config.modules;
+        };
+
+        result = builtins.listToAttrs (builtins.map (system: {
+          name = system;
+          value = homeForSystem system;
+        }) config.systems);
+
+        home_name = config.__module__.args.dynamic.name;
+        home_name_parts = builtins.match "([a-z][-a-z0-9]*)(@([-A-Za-z0-9]+))?(:([-_A-Za-z0-9]+))?" home_name;
+
+        system = builtins.elemAt home_name_parts 4;
+
+        systemProvided = system != null;
+      in {
         options = {
+          systems = lib.options.create {
+            description = "The systems this home is valid on.";
+            type = lib.types.list.of lib.types.string;
+          } // (if systemProvided then {
+            default.value = [ system ];
+            writeable = false;
+          } else {});
+          
           args = lib.options.create {
             description = "Additional arguments to pass to home-manager modules.";
             type = lib.types.attrs.any;
@@ -30,9 +59,8 @@ in
             default.value =
               if
                 inputs ? nixpkgs
-                && inputs.nixpkgs.result ? x86_64-linux
               then
-                inputs.nixpkgs.result.x86_64-linux
+                inputs.nixpkgs.result
               else
                 null;
           };
@@ -44,15 +72,10 @@ in
           };
 
           result = lib.options.create {
-            description = "The created Home Manager home.";
-            type = lib.types.raw;
+            description = "The created Home Manager home for each of the systems.";
+            type = lib.types.attrs.of lib.types.raw;
             writable = false;
-            default.value = config.home-manager.lib.homeManagerConfiguration {
-              pkgs = config.pkgs;
-              lib = config.pkgs.lib;
-              extraSpecialArgs = config.args;
-              modules = config.modules;
-            };
+            default.value = result;
           };
         };
       }));
