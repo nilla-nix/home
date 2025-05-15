@@ -376,7 +376,6 @@ pub async fn exists_in_project(
     entry: FixedOutputStoreEntry,
     name: &str,
 ) -> Result<bool> {
-    info!("Checking that target exists");
     let file_str = entry.path.to_str().unwrap();
 
     let hash = entry.hash;
