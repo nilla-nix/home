@@ -60,10 +60,17 @@ pub async fn switch_cmd(
             info!("Switching to new configuration");
             let out_path = &o[0];
 
-            Command::new(format!("{out_path}/activate"))
+            let activate_output = Command::new(format!("{out_path}/activate"))
                 .output()
                 .await
                 .unwrap();
+
+            if !activate_output.status.success() {
+                error!(
+                    "Failed to switch to new configuration:\n{}",
+                    String::from_utf8_lossy(&activate_output.stdout)
+                ) // home-manager writes its "error" text to stdout
+            }
         }
         Err(e) => return error!("{:?}", e),
     };
