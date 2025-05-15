@@ -1,7 +1,10 @@
 use log::{debug, error, info};
 use tokio::process::Command;
 
-use crate::util::nix::{self};
+use crate::{
+    get_home_specifier_and_system,
+    util::nix::{self},
+};
 
 pub async fn switch_cmd(
     cli: &nixos_cli_def::Cli,
@@ -24,65 +27,40 @@ pub async fn switch_cmd(
         _ => {}
     }
 
-    let system = match args.system.clone() {
-        Some(s) => Some(s),
-        _ => None,
-    };
-
-    let hostname = if let Some(name) = args.name.clone() {
-        if name.contains('.') {
-            return error!("Invalid hostname {}", name);
-        } else {
-            name
-        }
-    } else {
-        gethostname::gethostname().into_string().unwrap()
-    };
-
-    let attribute = &format!("systems.nixos.\"{hostname}\".result.config.system.build.toplevel");
-
-    match nix::exists_in_project(
-        "nilla.nix",
-        entry.clone(),
-        &format!("systems.nixos.\"{hostname}\""),
+    let (specifier, system) = match get_home_specifier_and_system(
+        entry,
+        &args.specifier.clone().unwrap_or("".to_owned()),
     )
     .await
     {
-        Ok(false) => {
-            return error!("Attribute {attribute} does not exist in project {path:?}");
-        }
-        Err(e) => return error!("{e:?}"),
-        _ => {}
-    }
+        Ok((specifier, system)) => (specifier, system),
+        Err(e) => return error!("{:?}", e),
+    };
 
-    info!("Building system {hostname}");
+    let attribute = format!("homes.\"{specifier}\".result.activationPackage");
+
+    info!("Building home {specifier}");
     let out = nix::build(
         &path,
         &attribute,
         nix::BuildOpts {
             link: true,
             report: true,
-            system: system.as_deref(),
+            system: Some(system.as_str()),
         },
     )
     .await;
 
     match out {
         Ok(o) => {
+            if o.is_empty() {
+                return error!("Failed to build configuration, skipping switching to it");
+            }
+
             info!("Switching to new configuration");
             let out_path = &o[0];
 
-            let sudo = match which::which("sudo") {
-                Ok(s) => s,
-                Err(_e) => match which::which("doas") {
-                    Ok(d) => d,
-                    Err(_e) => return error!("Could not find sudo or doas"),
-                },
-            };
-
-            Command::new(sudo)
-                .arg(format!("{out_path}/bin/switch-to-configuration"))
-                .arg("switch")
+            Command::new(format!("{out_path}/activate"))
                 .output()
                 .await
                 .unwrap();

@@ -1,6 +1,6 @@
 use log::{debug, error, info};
 
-use crate::util::nix;
+use crate::{get_home_specifier_and_system, util::nix};
 
 pub async fn build_cmd(cli: &nixos_cli_def::Cli, args: &nixos_cli_def::commands::build::BuildArgs) {
     debug!("Resolving project {}", cli.project);
@@ -20,45 +20,26 @@ pub async fn build_cmd(cli: &nixos_cli_def::Cli, args: &nixos_cli_def::commands:
         _ => {}
     }
 
-    let system = match args.system.clone() {
-        Some(s) => Some(s),
-        _ => None,
-    };
-
-    let hostname = if let Some(name) = args.name.clone() {
-        if name.contains('.') {
-            return error!("Invalid hostname {}", name);
-        } else {
-            name
-        }
-    } else {
-        gethostname::gethostname().into_string().unwrap()
-    };
-
-    let attribute = &format!("systems.nixos.\"{hostname}\".result.config.system.build.toplevel");
-
-    match nix::exists_in_project(
-        "nilla.nix",
-        entry.clone(),
-        &format!("systems.nixos.\"{hostname}\""),
+    let (specifier, system) = match get_home_specifier_and_system(
+        entry,
+        &args.specifier.clone().unwrap_or("".to_owned()),
     )
     .await
     {
-        Ok(false) => {
-            return error!("Attribute {attribute} does not exist in project {path:?}");
-        }
-        Err(e) => return error!("{e:?}"),
-        _ => {}
-    }
+        Ok((specifier, system)) => (specifier, system),
+        Err(e) => return error!("{:?}", e),
+    };
 
-    info!("Building system {hostname}");
+    let attribute = format!("homes.\"{specifier}\".result.activationPackage");
+
+    info!("Building home {specifier}");
     let out = nix::build(
         &path,
         &attribute,
         nix::BuildOpts {
             link: true,
             report: true,
-            system: system.as_deref(),
+            system: Some(system.as_str()),
         },
     )
     .await;
