@@ -60,7 +60,6 @@ async fn main() -> anyhow::Result<()> {
 
     match &cli.command {
         Some(command) => match command {
-            Commands::Test(args) => nilla_nixos::commands::test::test_cmd(&cli, args).await,
             Commands::Switch(args) => nilla_nixos::commands::switch::switch_cmd(&cli, args).await,
             Commands::Build(args) => nilla_nixos::commands::build::build_cmd(&cli, args).await,
             Commands::Completions(args) => completions::completions_cmd(args, &mut Cli::command()),
