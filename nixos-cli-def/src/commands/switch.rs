@@ -1,10 +1,8 @@
 use clap::Args;
 
 #[derive(Debug, Args)]
-#[command(about = "Build, install, and switch into a system")]
+#[command(about = "Build, install, and switch into a home")]
 pub struct SwitchArgs {
-    #[arg(help = "System name")]
-    pub name: Option<String>,
-    #[arg(short, long, help = "System architecture (eg: x86_64-linux)")]
-    pub system: Option<String>,
+    #[arg(help = "Home specifier, in the format {username}[@hostname][:system]")]
+    pub specifier: Option<String>,
 }
