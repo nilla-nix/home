@@ -1,7 +1,7 @@
 { lib, config }:
 let
   inherit (config) inputs;
-in lib.types.attrs.of (lib.types.submodule (
+in lib.types.attrs.of (lib.types.submodules.portable (
   {
     name = "home";
     description = "A home-manager home";
