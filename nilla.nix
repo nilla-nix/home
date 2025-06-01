@@ -23,6 +23,7 @@ nilla.create ({ config }: {
 
     modules.nilla = {
       home = ./modules/home.nix;
+      nixos = ./modules/nixos.nix;
     };
 
     packages.default = config.packages.nilla-home;
