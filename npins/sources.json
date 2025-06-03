@@ -11,23 +11,20 @@
       "submodules": false,
       "revision": "e3be528e4f03538852ba49b413ec4ac843edeb60",
       "url": "https://github.com/nix-community/fenix/archive/e3be528e4f03538852ba49b413ec4ac843edeb60.tar.gz",
-      "hash": "1bz4qlxb2r103mhgi77g3642h442943hgyfrm2q7bpsv9dm42qjs"
+      "hash": "sha256-WmJBaktb33WwqNn5BwdJghAoiBnvnPhgHSBksTrF5K8="
     },
     "nilla": {
-      "type": "GitRelease",
+      "type": "Git",
       "repository": {
         "type": "GitHub",
         "owner": "nilla-nix",
         "repo": "nilla"
       },
-      "pre_releases": true,
-      "version_upper_bound": null,
-      "release_prefix": null,
+      "branch": "private/skyler/push-vsumrmrmvktt",
       "submodules": false,
-      "version": "v0.0.0-alpha.12",
-      "revision": "5d3e509727f387a3000d9ac32031836661f233c9",
-      "url": "https://api.github.com/repos/nilla-nix/nilla/tarball/v0.0.0-alpha.12",
-      "hash": "0y70c9p4ln0jd673k2ifi28s92pgphjdykgar71s20bv2qzg8naz"
+      "revision": "c780262b7d25208a7a4d6d4ea5bd6235412690b0",
+      "url": "https://github.com/nilla-nix/nilla/archive/c780262b7d25208a7a4d6d4ea5bd6235412690b0.tar.gz",
+      "hash": "sha256-OX3v2wv2bk/K3OlOc+3EgktmLSzWfufZ6yj3zGpfDd8="
     },
     "nixpkgs": {
       "type": "Git",
@@ -40,8 +37,8 @@
       "submodules": false,
       "revision": "d89fc19e405cb2d55ce7cc114356846a0ee5e956",
       "url": "https://github.com/nixos/nixpkgs/archive/d89fc19e405cb2d55ce7cc114356846a0ee5e956.tar.gz",
-      "hash": "1i3sj7bapriaanmnlrr6p3khr20j1k59il12fkww78ik2xa81vyx"
+      "hash": "sha256-3e+AVBczosP5dCLQmMoMEogM57gmZ2qrVSrmq9aResQ="
     }
   },
-  "version": 5
+  "version": 6
 }
