@@ -6,20 +6,24 @@ in lib.types.attrs.of (lib.types.submodules.portable (
     name = "home";
     description = "A home-manager home";
     module = { config }: let
+      home_name = config.__module__.args.dynamic.name;
+      home_name_parts = builtins.match "([a-z][-a-z0-9]*)(@([-A-Za-z0-9]+))?(:([-_A-Za-z0-9]+))?" home_name;
+
+      argsModule = {
+        config._module.args = config.args;
+        _file = "virtual:nilla-nix/home/${home_name}/args";
+      };
+
       homeForSystem = system: config.home-manager.lib.homeManagerConfiguration {
         pkgs = config.pkgs.${system};
         lib = config.pkgs.lib;
-        extraSpecialArgs = { inherit system; } // config.args;
-        modules = config.modules;
+        modules = config.modules ++ [ argsModule ];
       };
 
       result = builtins.listToAttrs (builtins.map (system: {
         name = system;
         value = homeForSystem system;
       }) config.systems);
-
-      home_name = config.__module__.args.dynamic.name;
-      home_name_parts = builtins.match "([a-z][-a-z0-9]*)(@([-A-Za-z0-9]+))?(:([-_A-Za-z0-9]+))?" home_name;
 
       username = builtins.elemAt home_name_parts 0;
       system = builtins.elemAt home_name_parts 4;
