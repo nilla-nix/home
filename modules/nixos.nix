@@ -42,6 +42,7 @@ in
             identity))
           (builtins.map ({home, homeName, username}: { lib, ... }: {
             _file = "virtual:nilla-nix/home/nixos/${homeName}/nixos";
+            config.home-manager.useGlobalPkgs = true; # Required or home modules will lose the nixpkgs config defined in nilla
             config.home-manager.users.${username} = { ... }: {
               _file = "virtual:nilla-nix/home/nixos/${homeName}/homeModule";
               imports = home.modules ++ [ {
