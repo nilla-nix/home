@@ -14,20 +14,17 @@
       "hash": "sha256-WmJBaktb33WwqNn5BwdJghAoiBnvnPhgHSBksTrF5K8="
     },
     "nilla": {
-      "type": "GitRelease",
+      "type": "Git",
       "repository": {
         "type": "GitHub",
         "owner": "nilla-nix",
         "repo": "nilla"
       },
-      "pre_releases": true,
-      "version_upper_bound": null,
-      "release_prefix": null,
+      "branch": "private/minion/push-swlstmwvzvkr",
       "submodules": false,
-      "version": "v0.0.0-alpha.14",
-      "revision": "2e98ae315a592ad6b6de44670514c048dcc88dc7",
-      "url": "https://api.github.com/repos/nilla-nix/nilla/tarball/refs/tags/v0.0.0-alpha.14",
-      "hash": "sha256-15lwhWcMonJH6UholMMHDc+p2BoSpGA4AYGrsXQA9Do="
+      "revision": "1a45420c0b579aea97d834d04e6eec773a8391b1",
+      "url": "https://github.com/nilla-nix/nilla/archive/1a45420c0b579aea97d834d04e6eec773a8391b1.tar.gz",
+      "hash": "sha256-4jqikEAkh5GUKGDkGAtWRWZexN25Rzt0yIsnilhA77U="
     },
     "nixpkgs": {
       "type": "Git",
@@ -43,5 +40,5 @@
       "hash": "sha256-3e+AVBczosP5dCLQmMoMEogM57gmZ2qrVSrmq9aResQ="
     }
   },
-  "version": 6
+  "version": 7
 }
