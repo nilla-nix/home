@@ -266,6 +266,7 @@ pub struct BuildOpts<'a> {
     pub link: bool,
     pub report: bool,
     pub system: Option<&'a str>,
+    pub extra_args: &'a [String],
 }
 
 pub async fn build<P>(file: P, name: &str, opts: BuildOpts<'_>) -> Result<Vec<String>>
@@ -286,6 +287,12 @@ where
         args.push(system);
     };
     args.push(&name);
+
+    // Add extra arguments
+    for arg in opts.extra_args {
+        args.push(arg);
+    }
+
     debug!("Running nix build:\nnix {}", args.join(" "));
     let cmd = Command::new("nix")
         .stdout(Stdio::piped())
