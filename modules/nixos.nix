@@ -25,7 +25,7 @@ in
         };
 
         config.modules = let
-          system = submodule.config.pkgs.system;
+          system = submodule.config.pkgs.stdenv.hostPlatform.system;
           warn' = builtins.warn or builtins.trace; # builtins.warn doesn't exist on some versions of nix/lix
           warnIf = condition: message: value: if condition then warn' message value else value;
           homeManager = submodule.config.home-manager;
@@ -79,7 +79,7 @@ in
         }
         (lib.attrs.mapToList (homeName: home: let
           homeHasHomeManager = !(builtins.isNull home.home-manager);
-          homeIsValidForSystem = home ? result.${value.pkgs.system};
+          homeIsValidForSystem = home ? result.${value.pkgs.stdenv.hostPlatform.system};
         in [
           {
             assertion = homeHasHomeManager;
@@ -87,13 +87,13 @@ in
           }
           {
             assertion = !homeHasHomeManager || !hasNixpkgs || homeIsValidForSystem;
-            message = "You've asked for the home \"${homeName}\" to be activated in the NixOS system \"${name}\", but it isn't valid for \"${value.pkgs.system}\" systems.";
+            message = "You've asked for the home \"${homeName}\" to be activated in the NixOS system \"${name}\", but it isn't valid for \"${value.pkgs.stdenv.hostPlatform.system}\" systems.";
           }
         ]) value.homes)
         (let
           usernames = lib.attrs.mapToList (homeName: home: let
             homeHasHomeManager = !(builtins.isNull home.home-manager);
-            homeIsValidForSystem = home ? result.${value.pkgs.system};
+            homeIsValidForSystem = home ? result.${value.pkgs.stdenv.hostPlatform.system};
           in 
             if homeHasHomeManager && hasNixpkgs && homeIsValidForSystem
             then let
