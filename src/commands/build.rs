@@ -1,24 +1,13 @@
-use log::{debug, error, info};
+use log::error;
 
 use crate::{get_home_specifier_and_system, util::nix};
+use crate::commands::common;
 
 pub async fn build_cmd(cli: &home_cli_def::Cli, args: &home_cli_def::commands::build::BuildArgs) {
-    debug!("Resolving project {}", cli.project);
-    let Ok(project) = crate::util::project::resolve(&cli.project).await else {
-        return error!("Could not find project {}", cli.project);
+    let (path, entry) = match common::get_nilla_nix_path(&cli.project).await {
+        Ok(p) => p,
+        Err(e) => return error!("{}", e),
     };
-
-    let entry = project.clone().get_entry();
-    let mut path = project.get_path();
-
-    debug!("Resolved project {path:?}");
-
-    path.push("nilla.nix");
-
-    match path.try_exists() {
-        Ok(false) | Err(_) => return error!("File not found"),
-        _ => {}
-    }
 
     let (specifier, system) = match get_home_specifier_and_system(
         entry,
@@ -30,9 +19,11 @@ pub async fn build_cmd(cli: &home_cli_def::Cli, args: &home_cli_def::commands::b
         Err(e) => return error!("{:?}", e),
     };
 
-    let attribute = format!("homes.\"{specifier}\".result.\"{system}\".activationPackage");
+    let attribute = common::format_home_attribute(&specifier, &system);
+    let builders = crate::util::args::extract_builders_from_args(&args.extra_nix_build_args);
 
-    info!("Building home {specifier}");
+    common::log_build_operation(&specifier, builders.as_ref());
+
     let out = nix::build(
         &path,
         &attribute,
@@ -40,6 +31,7 @@ pub async fn build_cmd(cli: &home_cli_def::Cli, args: &home_cli_def::commands::b
             link: true,
             report: true,
             system: Some(system.as_str()),
+            extra_args: &args.extra_nix_build_args,
         },
     )
     .await;
